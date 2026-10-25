@@ -18,26 +18,18 @@
 
 ## 📌 Overview
 
-Offline Apache Kafka / ZooKeeper configuration auditor
+OKafkaX is an offline Apache Kafka and ZooKeeper configuration auditor. It parses Java Properties, JAAS, and related unit/env files to review listeners, SASL, TLS, authorizers, ZooKeeper ACLs, and secret-at-rest posture. Findings include CWE and MITRE mapping with TXT/Markdown/JSON/CSV/SARIF export and CI severity gates.
 
 ---
 
 ## ✨ Features
 
-- Faithful java.util.Properties parser (continuations, \uXXXX escapes, '=' / ':' / whitespace separators, duplicate-key tracking, per-key file:line origin)
-- Role detection — ZooKeeper-mode broker, KRaft broker, KRaft controller, combined node, ZooKeeper server
-- Listener model — listeners, advertised.listeners, listener.security.protocol.map, per-listener overrides
-- Authorizer review — allow.everyone.if.no.acl.found, missing / deprecated / mode-mismatched authorizers, super.users wildcard & ANONYMOUS principals
-- SASL review — PLAIN over cleartext, unsecured OAUTHBEARER, inline sasl.jaas.config secrets
-- TLS review — ssl.client.auth, cipher suites, legacy protocols, hostname verification, keystore hygiene
-- Inter-broker & KRaft controller channel encryption
-- ZooKeeper server audit — auth providers, skipACL, 4lw whitelist, AdminServer, quorum SASL / TLS
-- JAAS file parser — PlainLoginModule user_ stores, Kerberos keytabs, ZooKeeper super user, debug
-- Secret-at-rest checks — keystore / truststore / key passwords in world-readable properties files
-- JVM option review (systemd / env files) — JMX remote without authentication, JAAS file linkage
-- Offline --root tree discovery, CWE + MITRE mapping
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+- Faithful `java.util.Properties` parser with continuations, escapes, duplicate-key tracking, and file:line origin
+- Role detection for ZooKeeper-mode broker, KRaft broker/controller, combined node, and ZooKeeper server
+- Listener, SASL (PLAIN/OAUTHBEARER/JAAS), TLS, inter-broker, and controller channel review
+- ZooKeeper auth providers, skipACL, 4lw whitelist, AdminServer, and quorum SASL/TLS checks
+- Secret-at-rest and JVM option review (JMX remote without auth); offline `--root` discovery
+- Export TXT / MD / JSON / CSV / SARIF; `--demo` self-test and `--fail-on` / `--min-severity` gates
 
 ---
 
@@ -51,7 +43,10 @@ Offline Apache Kafka / ZooKeeper configuration auditor
 ## 🚀 Usage
 
 ```bash
-./OKafkaX
+./OKafkaX -c server.properties -z zoo.cfg --scan
+./OKafkaX --root /opt/kafka --json -o kafka.json --fail-on high
+./OKafkaX --demo --list-rules
+./OKafkaX --help
 ```
 
 ---
